@@ -1,95 +1,58 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
+import { Button , Grid , Typography , Card , CardActions ,CardContent ,CardMedia   } from "@mui/material";
+import Link from "next/link";
+ 
+ 
+async function getData() {
+  const res = await fetch('https://www.melivecode.com/api/attractions')
+ 
+  if (!res.ok) {
 
-export default function Home() {
+    throw new Error('Failed to fetch data')
+  }
+
+  return res.json()
+}
+
+ 
+ 
+
+export default async function Home() {
+  const data = await getData()
+ 
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
+    <div>
+         <Typography variant="h2" >
+            Attractions
+         </Typography>
+       <Grid container spacing={2} >
+         {data.map((item)=>{
+          return <Grid item xs={12} sm={6} md={4} lg={2} key={item.id}>
+         <Card>
+            <CardMedia
+              sx={{ height: 140 }}
+              image={item.coverimage}
+              title={item.name}
             />
-          </a>
-        </div>
-      </div>
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="div">
+              {item.name}
+            </Typography>
+          <Typography variant="body2" color="text.secondary">
+              {item.detail}
+          </Typography>
+          </CardContent>
+          <CardActions>
+            <Link href={'/attractions/'+ item.id}>
+            <Button size="small">Learn More</Button>
+            </Link>
+          </CardActions>
+        </Card>
+       </Grid>
+         })}
+    </Grid>
+    </div>
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+     
   );
 }
